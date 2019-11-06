@@ -9,8 +9,46 @@
 import SwiftUI
 
 struct ContentView: View {
+    @Environment(\.managedObjectContext) var managedObjectContext
+    @FetchRequest(fetchRequest: ToDoItem.getUndoneToDoItems()) var openToDoItems: FetchedResults<ToDoItem>
+    @FetchRequest(fetchRequest: ToDoItem.getDoneToDoItems()) var doneToDoItems: FetchedResults<ToDoItem>
+    
     var body: some View {
-        Text("Hello World")
+        NavigationView {
+            List {
+                Section(header: Text("ToDos")) {
+                    ForEach(self.openToDoItems) { toDoItem in
+                        
+                        ToDoItemView(title: toDoItem.title, itemDescription: toDoItem.itemDescription ?? "", dueDate: "Heute")
+                    }.onDelete { indexSet in
+                        let deleteItem = self.openToDoItems[indexSet.first!]
+                        self.managedObjectContext.delete(deleteItem)
+                        do {
+                            try self.managedObjectContext.save()
+                        } catch {
+                            print(error)
+                        }
+                    }
+                }
+                Section(header: Text("Erledigt")) {
+                    ForEach(self.doneToDoItems) { toDoItem in
+                        ToDoItemView(title: toDoItem.title, itemDescription: toDoItem.itemDescription ?? "", dueDate: "Heute")
+                    }.onDelete { indexSet in
+                        let deleteItem = self.doneToDoItems[indexSet.first!]
+                        self.managedObjectContext.delete(deleteItem)
+                        do {
+                            try self.managedObjectContext.save()
+                        } catch {
+                            print(error)
+                        }
+                    }
+                }
+            }
+            .navigationBarTitle(Text("ToDos"))
+            .navigationBarItems(leading: EditButton(), trailing: NavigationLink(destination: ToDoItemDetailView()) {
+                Image(systemName: "plus")
+            } )
+        }
     }
 }
 
