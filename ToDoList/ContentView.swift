@@ -12,6 +12,7 @@ struct ContentView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @FetchRequest(fetchRequest: ToDoItem.getUndoneToDoItems()) var openToDoItems: FetchedResults<ToDoItem>
     @FetchRequest(fetchRequest: ToDoItem.getDoneToDoItems()) var doneToDoItems: FetchedResults<ToDoItem>
+    @State var showDetailView = false
     
     var body: some View {
         NavigationView {
@@ -45,10 +46,17 @@ struct ContentView: View {
                 }
             }
             .navigationBarTitle(Text("ToDos"))
-            .navigationBarItems(leading: EditButton(), trailing: NavigationLink(destination: ToDoItemDetailView()) {
+            .navigationBarItems(leading: EditButton(), trailing: Button(action: {
+                self.showDetailView = true
+                
+            }, label: {
                 Image(systemName: "plus")
-            } )
-        }
+            }))
+            }.sheet(isPresented: $showDetailView, onDismiss: {
+                self.showDetailView = false
+            }, content: {
+                ToDoItemDetailView()
+            })
     }
 }
 
