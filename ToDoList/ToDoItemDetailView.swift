@@ -17,6 +17,10 @@ struct ToDoItemDetailView: View {
     
     @State var toDoItem: ToDoItem?
     
+    init(toDoItem: ToDoItem? = nil) {
+        self.toDoItem = toDoItem
+    }
+    
     var body: some View {
         Form {
             TextField("Titel", text: $title) {
@@ -24,7 +28,14 @@ struct ToDoItemDetailView: View {
             TextField("Beschreibung", text: $itemDescription) {
             }
             DatePicker(selection: /*@START_MENU_TOKEN@*/.constant(Date())/*@END_MENU_TOKEN@*/, label: { Text("Fälligkeit") })
-        }.onAppear {
+            
+            Button(action: {
+                self.saveItem()
+            }, label: {
+                Text("Save")
+            })
+        }
+        .onAppear {
             if let toDo = self.toDoItem {
                 self.title = toDo.title
                 self.itemDescription = toDo.itemDescription ?? ""
@@ -32,24 +43,24 @@ struct ToDoItemDetailView: View {
                 self.priority = toDo.priority
             }
         }
-        .onDisappear {
-            
-            if self.toDoItem == nil {
-                self.toDoItem = ToDoItem(context: self.managedObjectContext)
-            }
-            
-            self.toDoItem?.creationDate = Date()
-            self.toDoItem?.title = self.title
-            self.toDoItem?.itemDescription = self.itemDescription
-            self.toDoItem?.dueDate = self.dueDate
-            self.toDoItem?.priority = self.priority
-            self.toDoItem?.done = false
-            
-            do {
-                try self.managedObjectContext.save()
-            } catch {
-                print(error)
-            }
+    }
+    
+    fileprivate func saveItem() {
+        if self.toDoItem == nil {
+            self.toDoItem = ToDoItem(context: self.managedObjectContext)
+        }
+        
+        self.toDoItem?.creationDate = Date()
+        self.toDoItem?.title = self.title
+        self.toDoItem?.itemDescription = self.itemDescription
+        self.toDoItem?.dueDate = self.dueDate
+        self.toDoItem?.priority = self.priority
+        self.toDoItem?.done = false
+        
+        do {
+            try self.managedObjectContext.save()
+        } catch {
+            print(error)
         }
     }
 }

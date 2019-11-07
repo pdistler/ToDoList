@@ -13,14 +13,18 @@ struct ContentView: View {
     @FetchRequest(fetchRequest: ToDoItem.getUndoneToDoItems()) var openToDoItems: FetchedResults<ToDoItem>
     @FetchRequest(fetchRequest: ToDoItem.getDoneToDoItems()) var doneToDoItems: FetchedResults<ToDoItem>
     @State var showDetailView = false
+    @State var selectedItem: ToDoItem?
     
     var body: some View {
         NavigationView {
             List {
                 Section(header: Text("ToDos")) {
                     ForEach(self.openToDoItems) { toDoItem in
-                        
                         ToDoItemView(title: toDoItem.title, itemDescription: toDoItem.itemDescription ?? "", dueDate: "Heute")
+                            .onTapGesture {
+                                self.showDetailView = true
+                                self.selectedItem = toDoItem
+                        }
                     }.onDelete { indexSet in
                         let deleteItem = self.openToDoItems[indexSet.first!]
                         self.managedObjectContext.delete(deleteItem)
@@ -34,6 +38,10 @@ struct ContentView: View {
                 Section(header: Text("Erledigt")) {
                     ForEach(self.doneToDoItems) { toDoItem in
                         ToDoItemView(title: toDoItem.title, itemDescription: toDoItem.itemDescription ?? "", dueDate: "Heute")
+                        .onTapGesture {
+                            self.showDetailView = true
+                            self.selectedItem = toDoItem
+                        }
                     }.onDelete { indexSet in
                         let deleteItem = self.doneToDoItems[indexSet.first!]
                         self.managedObjectContext.delete(deleteItem)
@@ -45,6 +53,11 @@ struct ContentView: View {
                     }
                 }
             }
+            .sheet(isPresented: $showDetailView, onDismiss: {
+                self.showDetailView = false
+            }, content: {
+                ToDoItemDetailView(toDoItem: nil)
+            })
             .navigationBarTitle(Text("ToDos"))
             .navigationBarItems(leading: EditButton(), trailing: Button(action: {
                 self.showDetailView = true
