@@ -13,49 +13,47 @@ struct ToDoItemDetailView: View {
     @State var title = ""
     @State var dueDate = Date()
     @State var itemDescription = ""
+    @State var done = false
     @State var priority = 2
+    @Binding var toDoItem: ToDoItem
     
-    @State var toDoItem: ToDoItem?
-    
-    init(toDoItem: ToDoItem? = nil) {
-        self.toDoItem = toDoItem
+    init(toDoItem: Binding<ToDoItem>) {
+        self._toDoItem = toDoItem
     }
     
     var body: some View {
-        Form {
-            TextField("Titel", text: $title) {
+        VStack {
+            Form {
+                TextField("Titel", text: $title) {
+                }
+                TextField("Beschreibung", text: $itemDescription) {
+                }
+                Toggle("Erledigt", isOn: $done)
+                DatePicker(selection: $dueDate, in: Date()..., label: { Text("Fälligkeit") }) 
             }
-            TextField("Beschreibung", text: $itemDescription) {
-            }
-            DatePicker(selection: /*@START_MENU_TOKEN@*/.constant(Date())/*@END_MENU_TOKEN@*/, label: { Text("Fälligkeit") })
-            
             Button(action: {
                 self.saveItem()
             }, label: {
-                Text("Save")
+                Text("Speichern")
             })
+            
         }
         .onAppear {
-            if let toDo = self.toDoItem {
-                self.title = toDo.title
-                self.itemDescription = toDo.itemDescription ?? ""
-                self.dueDate = toDo.dueDate ?? Date()
-                self.priority = toDo.priority
-            }
+            self.title = self.toDoItem.title
+            self.itemDescription = self.toDoItem.itemDescription
+            self.dueDate = self.toDoItem.dueDate
+            self.priority = self.toDoItem.priority
+            self.done = self.toDoItem.done
         }
     }
     
     fileprivate func saveItem() {
-        if self.toDoItem == nil {
-            self.toDoItem = ToDoItem(context: self.managedObjectContext)
-        }
-        
-        self.toDoItem?.creationDate = Date()
-        self.toDoItem?.title = self.title
-        self.toDoItem?.itemDescription = self.itemDescription
-        self.toDoItem?.dueDate = self.dueDate
-        self.toDoItem?.priority = self.priority
-        self.toDoItem?.done = false
+        self.toDoItem.creationDate = Date()
+        self.toDoItem.title = self.title
+        self.toDoItem.itemDescription = self.itemDescription
+        self.toDoItem.dueDate = self.dueDate
+        self.toDoItem.priority = self.priority
+        self.toDoItem.done = self.done
         
         do {
             try self.managedObjectContext.save()
@@ -65,8 +63,10 @@ struct ToDoItemDetailView: View {
     }
 }
 
-struct ToDoItemDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        ToDoItemDetailView(toDoItem: ToDoItem())
-    }
-}
+//struct ToDoItemDetailView_Previews: PreviewProvider {
+//    static var item = ToDoItem()
+//    
+//    static var previews: some View {
+////        ToDoItemDetailView(toDoItem: item)
+//    }
+//}

@@ -10,12 +10,17 @@ import Foundation
 import CoreData
 
 public class ToDoItem: NSManagedObject, Identifiable {
-    @NSManaged public var creationDate: Date?
+    @NSManaged public var creationDate: Date
     @NSManaged public var title: String
     @NSManaged public var priority: Int
-    @NSManaged public var itemDescription: String?
-    @NSManaged public var dueDate: Date?
+    @NSManaged public var itemDescription: String
+    @NSManaged public var dueDate: Date
     @NSManaged public var done: Bool
+    
+    public override func awakeFromInsert() {
+        dueDate = Date()
+        creationDate = Date()
+    }
 }
 
 extension ToDoItem {

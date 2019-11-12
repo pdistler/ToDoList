@@ -9,19 +9,23 @@
 import SwiftUI
 
 struct ToDoItemView: View {
-//    var toDoItem: ToDoItem
-    let title: String
-    let itemDescription: String
-    let dueDate: String
+    var toDoItem: ToDoItem
+    var dateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .long
+        formatter.timeStyle = .short
+        
+        return formatter
+    }
     
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
-                Text(title)
-                    .font(.headline)
-                Text(itemDescription)
+                Text(toDoItem.title)
+                    .font(.title)
+                Text(toDoItem.itemDescription)
                     .font(.body)
-                Text(dueDate)
+                Text(dateFormatter.string(from: toDoItem.dueDate)).font(.footnote)
             }
         }
     }
@@ -32,7 +36,7 @@ struct ToDoItemView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        ToDoItemView(title: item.title, itemDescription: item.itemDescription ?? "", dueDate: "\(item.dueDate!)")
+        ToDoItemView(toDoItem: item)
     }
     
     static func getItem() -> ToDoItem {

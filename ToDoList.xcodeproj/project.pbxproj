@@ -19,6 +19,7 @@
 		8F337CB8236B6D4C00225A56 /* ToDoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F337CB7236B6D4C00225A56 /* ToDoItem.swift */; };
 		8F337CBA236B716600225A56 /* ToDoItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F337CB9236B716600225A56 /* ToDoItemView.swift */; };
 		8F38C6CE236C84AB00EA1A4F /* ToDoItemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F38C6CD236C84AB00EA1A4F /* ToDoItemDetailView.swift */; };
+		8F38C6D02376D70700EA1A4F /* CompletedToDoItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F38C6CF2376D70700EA1A4F /* CompletedToDoItemView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +58,7 @@
 		8F337CB7236B6D4C00225A56 /* ToDoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoItem.swift; sourceTree = "<group>"; };
 		8F337CB9236B716600225A56 /* ToDoItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoItemView.swift; sourceTree = "<group>"; };
 		8F38C6CD236C84AB00EA1A4F /* ToDoItemDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoItemDetailView.swift; sourceTree = "<group>"; };
+		8F38C6CF2376D70700EA1A4F /* CompletedToDoItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedToDoItemView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +114,7 @@
 				8F337C8B236B6C9300225A56 /* ContentView.swift */,
 				8F337CB7236B6D4C00225A56 /* ToDoItem.swift */,
 				8F337CB9236B716600225A56 /* ToDoItemView.swift */,
+				8F38C6CF2376D70700EA1A4F /* CompletedToDoItemView.swift */,
 				8F38C6CD236C84AB00EA1A4F /* ToDoItemDetailView.swift */,
 				8F337C8D236B6C9500225A56 /* Assets.xcassets */,
 				8F337C92236B6C9500225A56 /* LaunchScreen.storyboard */,
@@ -282,6 +285,7 @@
 				8F337C85236B6C9300225A56 /* AppDelegate.swift in Sources */,
 				8F38C6CE236C84AB00EA1A4F /* ToDoItemDetailView.swift in Sources */,
 				8F337CBA236B716600225A56 /* ToDoItemView.swift in Sources */,
+				8F38C6D02376D70700EA1A4F /* CompletedToDoItemView.swift in Sources */,
 				8F337C8A236B6C9300225A56 /* ToDoList.xcdatamodeld in Sources */,
 				8F337CB8236B6D4C00225A56 /* ToDoItem.swift in Sources */,
 				8F337C8C236B6C9300225A56 /* ContentView.swift in Sources */,

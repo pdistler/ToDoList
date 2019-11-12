@@ -13,17 +13,18 @@ struct ContentView: View {
     @FetchRequest(fetchRequest: ToDoItem.getUndoneToDoItems()) var openToDoItems: FetchedResults<ToDoItem>
     @FetchRequest(fetchRequest: ToDoItem.getDoneToDoItems()) var doneToDoItems: FetchedResults<ToDoItem>
     @State var showDetailView = false
-    @State var selectedItem: ToDoItem?
+    @State var showDetailViewForEditing = false
+    @State var selectedItem = ToDoItem()
     
     var body: some View {
         NavigationView {
             List {
                 Section(header: Text("ToDos")) {
                     ForEach(self.openToDoItems) { toDoItem in
-                        ToDoItemView(title: toDoItem.title, itemDescription: toDoItem.itemDescription ?? "", dueDate: "Heute")
+                        ToDoItemView(toDoItem: toDoItem)
                             .onTapGesture {
-                                self.showDetailView = true
                                 self.selectedItem = toDoItem
+                                self.showDetailViewForEditing = true
                         }
                     }.onDelete { indexSet in
                         let deleteItem = self.openToDoItems[indexSet.first!]
@@ -37,10 +38,10 @@ struct ContentView: View {
                 }
                 Section(header: Text("Erledigt")) {
                     ForEach(self.doneToDoItems) { toDoItem in
-                        ToDoItemView(title: toDoItem.title, itemDescription: toDoItem.itemDescription ?? "", dueDate: "Heute")
+                        CompletedToDoItemView(toDoItem: toDoItem)
                         .onTapGesture {
-                            self.showDetailView = true
                             self.selectedItem = toDoItem
+                            self.showDetailViewForEditing = true
                         }
                     }.onDelete { indexSet in
                         let deleteItem = self.doneToDoItems[indexSet.first!]
@@ -53,13 +54,14 @@ struct ContentView: View {
                     }
                 }
             }
-            .sheet(isPresented: $showDetailView, onDismiss: {
-                self.showDetailView = false
+            .sheet(isPresented: $showDetailViewForEditing, onDismiss: {
+                self.showDetailViewForEditing = false
             }, content: {
-                ToDoItemDetailView(toDoItem: nil)
+                ToDoItemDetailView(toDoItem: self.$selectedItem).environment(\.managedObjectContext, self.managedObjectContext)
             })
             .navigationBarTitle(Text("ToDos"))
             .navigationBarItems(leading: EditButton(), trailing: Button(action: {
+                self.newToDo()
                 self.showDetailView = true
                 
             }, label: {
@@ -68,13 +70,17 @@ struct ContentView: View {
             }.sheet(isPresented: $showDetailView, onDismiss: {
                 self.showDetailView = false
             }, content: {
-                ToDoItemDetailView()
+                ToDoItemDetailView(toDoItem: self.$selectedItem).environment(\.managedObjectContext, self.managedObjectContext)
             })
+    }
+    
+    func newToDo() {
+        selectedItem = ToDoItem(context: managedObjectContext)
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
-}
+//struct ContentView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ContentView()
+//    }
+//}
